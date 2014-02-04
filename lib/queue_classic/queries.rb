@@ -13,7 +13,6 @@ module QC
     def insert_custom(q_name, method, custom, args, chan=nil)
       QC.log_yield(:action => "insert_job_custom") do
         s="INSERT INTO #{TABLE_NAME} (q_name, method, args#{QC.format_custom(custom, :keys)}) VALUES ($1, $2, $3#{QC.format_custom(custom, :values)})"
-        ap [q_name, method, custom, args]
         res = Conn.execute(s, q_name, method, MultiJson.encode(args))
         Conn.notify(chan) if chan
       end
