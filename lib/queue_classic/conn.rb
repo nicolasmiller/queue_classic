@@ -10,17 +10,12 @@ module QC
         log(:at => "exec_sql", :sql => stmt.inspect)
         begin
           params = nil if params.empty?
-          ap 'fucking execute'
           r = connection.exec(stmt, params)
           result = []
           r.each {|t| result << t}
           result.length > 1 ? result : result.pop
         rescue PGError => e
-#          log(:error => stmt)
           log(:error => e.inspect)
-          ap stmt
-          ap params
-          ap 'execute raised'
           disconnect
           raise
         end
@@ -43,14 +38,12 @@ module QC
     end
 
     def drain_notify
-      ap 'drain_notify'
       until connection.notifies.nil?
         log(:at => "drain_notifications")
       end
     end
 
     def wait_for_notify(t)
-      ap 'wait_for_notify'
       connection.wait_for_notify(t) do |event, pid, msg|
         log(:at => "received_notification")
       end
@@ -68,13 +61,10 @@ module QC
     end
 
     def transaction_idle?
-      ap 'transaction_idle'
       connection.transaction_status == PGconn::PQTRANS_IDLE
     end
 
     def connection
-      ap 'fucking connection bullshit'
-      ap @connection
       @connection ||= connect
     end
 
@@ -88,14 +78,12 @@ module QC
     end
 
     def disconnect
-      ap 'disconnect'
       begin connection.finish
       ensure @connection = nil
       end
     end
 
     def connect
-      ap "connect this shouldn't fucking happen"
       log(:at => "establish_conn")
       conn = PGconn.connect(
         db_url.host.gsub(/%2F/i, '/'), # host or percent-encoded socket path
