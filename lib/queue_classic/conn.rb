@@ -16,6 +16,7 @@ module QC
           r.each {|t| result << t}
           result.length > 1 ? result : result.pop
         rescue PGError => e
+          log(:error => stmt)
           log(:error => e.inspect)
           disconnect
           raise
