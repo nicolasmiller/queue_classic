@@ -65,6 +65,8 @@ module QC
     end
 
     def connection
+      ap 'fucking connection bullshit'
+      ap @connection
       @connection ||= connect
     end
 
@@ -84,6 +86,7 @@ module QC
     end
 
     def connect
+      ap "connect this shouldn't fucking happen"
       log(:at => "establish_conn")
       conn = PGconn.connect(
         db_url.host.gsub(/%2F/i, '/'), # host or percent-encoded socket path
