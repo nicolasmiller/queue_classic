@@ -101,7 +101,7 @@ module QC
   end
 
   def self.format_custom(custom, message)
-    return ', #{custom.send(message).join(', ')}' unless custom.empty?
+    return ", #{custom.send(message).join(', ')}" unless custom.empty?
     ''
   end
 end
