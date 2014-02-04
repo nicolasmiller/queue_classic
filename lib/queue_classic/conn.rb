@@ -10,6 +10,7 @@ module QC
         log(:at => "exec_sql", :sql => stmt.inspect)
         begin
           params = nil if params.empty?
+          ap 'fucking execute'
           r = connection.exec(stmt, params)
           result = []
           r.each {|t| result << t}
@@ -38,12 +39,14 @@ module QC
     end
 
     def drain_notify
+      ap 'drain_notify'
       until connection.notifies.nil?
         log(:at => "drain_notifications")
       end
     end
 
     def wait_for_notify(t)
+      ap 'wait_for_notify'
       connection.wait_for_notify(t) do |event, pid, msg|
         log(:at => "received_notification")
       end
@@ -61,6 +64,7 @@ module QC
     end
 
     def transaction_idle?
+      ap 'transaction_idle'
       connection.transaction_status == PGconn::PQTRANS_IDLE
     end
 
@@ -80,6 +84,7 @@ module QC
     end
 
     def disconnect
+      ap 'disconnect'
       begin connection.finish
       ensure @connection = nil
       end
