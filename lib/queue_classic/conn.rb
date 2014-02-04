@@ -19,6 +19,7 @@ module QC
 #          log(:error => stmt)
           log(:error => e.inspect)
           ap stmt
+          ap params
           ap 'execute raised'
           disconnect
           raise
